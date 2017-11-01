@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>计步器检测工具</string>
+   <string>阿菲金奶量模拟</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -271,9 +271,6 @@
     </item>
    </layout>
    <zorder></zorder>
-   <zorder>panelTable</zorder>
-   <zorder>verticalSpacer_4</zorder>
-   <zorder>verticalSpacer_5</zorder>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
