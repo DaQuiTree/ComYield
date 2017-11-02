@@ -126,27 +126,29 @@ void MainWindow::HandlingReadDataSlot()
         buffer = mSerialPort->readAll();
         if(DataXor((uchar*)buffer.data(), 4) == buffer[4]) //校验通过...
         {
-            switch(buffer[3])
-            {
-                case 0x74://获取数据
-                    yd[buffer[0]-1].GetData(mv,cv,bc);
-                    cmdRead = QByteArray::fromHex("100107740120700093025D00FB000004");
-                    cmdRead[1] = (uchar)buffer[0];
-                    cmdRead[9] = (uchar)(mv>>8);
-                    cmdRead[8] = (uchar)mv;
-                    cmdRead[7] = (uchar)cv;
-                    cmdRead[15] = DataXor((uchar*)cmdRead.data(),15);
-                    mSerialPort->write(cmdRead);
-                    break;
-                case 0x7A:
-                    cmdClear = QByteArray::fromHex("0501077A79");
-                    cmdClear[1] = (uchar)buffer[0];
-                    cmdClear[0] = (uchar)buffer[1];
-                    cmdClear[4] = DataXor((uchar*)cmdClear.data(),4);
-                    ChangeClearSta(buffer[0]);
-                    mSerialPort->write(cmdClear);
-                    break;
-                default: break;
+            if(ui->panelTable->item(buffer[0]-1,3)->checkState() == Qt::Unchecked){
+                switch(buffer[3])
+                {
+                    case 0x74://获取数据
+                        yd[buffer[0]-1].GetData(mv,cv,bc);
+                        cmdRead = QByteArray::fromHex("100107740120700093025D00FB000004");
+                        cmdRead[1] = (uchar)buffer[0];
+                        cmdRead[9] = (uchar)(mv>>8);
+                        cmdRead[8] = (uchar)mv;
+                        cmdRead[7] = (uchar)cv;
+                        cmdRead[15] = DataXor((uchar*)cmdRead.data(),15);
+                        mSerialPort->write(cmdRead);
+                        break;
+                    case 0x7A:
+                        cmdClear = QByteArray::fromHex("0501077A79");
+                        cmdClear[1] = (uchar)buffer[0];
+                        cmdClear[0] = (uchar)buffer[1];
+                        cmdClear[4] = DataXor((uchar*)cmdClear.data(),4);
+                        ChangeClearSta(buffer[0]);
+                        mSerialPort->write(cmdClear);
+                        break;
+                    default: break;
+                }
             }
         }
     }
@@ -181,11 +183,13 @@ void MainWindow::FillTable()
             str1.insert(0,"0");
         }
         item->setText(str1.toUpper());
+        item->setTextAlignment(Qt::AlignCenter);
         ui->panelTable->setItem(i,0,item);
 
         item = new QTableWidgetItem();
         if(str2.length() == 1)str2.insert(0,"0");
         item->setText(str2.toUpper());
+        item->setTextAlignment(Qt::AlignCenter);
         ui->panelTable->setItem(i,1,item);
 
         item = new QTableWidgetItem();
@@ -194,7 +198,12 @@ void MainWindow::FillTable()
         }else{
             item->setText("N");
         }
+        item->setTextAlignment(Qt::AlignCenter);
         ui->panelTable->setItem(i,2,item);
+
+        item = new QTableWidgetItem();
+        item->setCheckState(Qt::Unchecked);
+        ui->panelTable->setItem(i,3,item);
     }
 }
 
